@@ -40,9 +40,6 @@ class TileCollection {
                     for (int x = 0; x < 2; x++)
                         tiles.add(new Tile(y != 0 ? x + 1 : x, y, TileColor.RED));
                 break;
-            default:
-                println("Hello World");
-                break;	
         }
     }
 
@@ -73,16 +70,12 @@ class TileCollection {
             int newX = tile.x + moveX;
             int newY = tile.y + moveY;
 
-            println("newY", newY);
-
             if (!this.locked) {
                 if (newY >= height) this.locked = true;
-                for (Tile lockedTile: lockedTiles) {
-                    println("lockedTile.y", lockedTile.y);
+                for (Tile lockedTile: lockedTiles) 
                     if (lockedTile.y == newY && lockedTile.x == newX) {
                         this.locked = true;
                         break;
-                    }
                 }
             }
             if (!xLocked && (newX >= width || newX < 0)) xLocked = true;

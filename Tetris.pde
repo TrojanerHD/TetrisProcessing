@@ -43,10 +43,3 @@ void keyPressed() {
     }
     for (Tile tile: lockedTiles) tile.printSquare();
 }
-
-ArrayList<Tile> removeTile(Tile tile) {
-    ArrayList<Tile> tempLockedTiles = new ArrayList();
-    for (Tile tempTile: lockedTiles)
-        if (tempTile != tile) tempLockedTiles.add(tempTile);
-    return tempLockedTiles;
-} 
