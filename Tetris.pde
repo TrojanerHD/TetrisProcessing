@@ -21,17 +21,7 @@ void draw() {
         }
         count = 0;
     }
-    for (int i = 0; i < lockedTiles.size(); i++) {
-        Tile tile = lockedTiles.get(i);
-        ArrayList<Tile> sameCoordinates = new ArrayList(lockedTiles);
-        sameCoordinates.removeIf(
-        );
-        if (sameCoordinates.size() == 1) {
-            lockedTiles.remove(i);
-            return;
-        }
-        tile.printSquare();
-    }
+    for (Tile tile: lockedTiles) tile.printSquare();
 }
 
 void keyPressed() {
@@ -53,3 +43,10 @@ void keyPressed() {
     }
     for (Tile tile: lockedTiles) tile.printSquare();
 }
+
+ArrayList<Tile> removeTile(Tile tile) {
+    ArrayList<Tile> tempLockedTiles = new ArrayList();
+    for (Tile tempTile: lockedTiles)
+        if (tempTile != tile) tempLockedTiles.add(tempTile);
+    return tempLockedTiles;
+} 

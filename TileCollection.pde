@@ -3,7 +3,7 @@ class TileCollection {
     boolean locked = false;
 
     void generateRandomTile() {
-        switch (Math.round(random(1f))) {
+        switch (Math.round(random(6f))) {
             case 0:
                 for (int y = 0; y < 4; y++)
                     tiles.add(new Tile(0, y, TileColor.LIGHT_BLUE));
@@ -12,8 +12,33 @@ class TileCollection {
                 for (int y = 0; y < 3; y++) {
                     tiles.add(new Tile(0, y, TileColor.DARK_BLUE));
                     if (y == 2) tiles.add(new Tile(1, y, TileColor.DARK_BLUE));
-
                 }
+                break;
+            case 2:
+                for (int y = 0; y < 3; y++) {
+                    tiles.add(new Tile(1, y, TileColor.ORANGE));
+                    if (y == 2) tiles.add(new Tile(0, y, TileColor.ORANGE));
+                }
+                break;
+            case 3:
+                for (int y = 0; y < 2; y++)
+                    for (int x = 0; x < 2; x++) 
+                        tiles.add(new Tile(x, y, TileColor.YELLOW));
+                break;
+            case 4:
+                for (int y = 0; y < 2; y++)
+                    for (int x = 0; x < 2; x++)
+                        tiles.add(new Tile(y != 0 ? x : x + 1, y, TileColor.GREEN));
+                break;
+            case 5:
+                for (int y = 0; y < 2; y++)
+                    if (y == 0) tiles.add(new Tile(1, y, TileColor.PURPLE));
+                    else for (int x = 0; x < 3; x++) tiles.add(new Tile(x, y, TileColor.PURPLE));
+                break;
+            case 6:
+                for (int y = 0; y < 2; y++)
+                    for (int x = 0; x < 2; x++)
+                        tiles.add(new Tile(y != 0 ? x + 1 : x, y, TileColor.RED));
                 break;
             default:
                 println("Hello World");
@@ -48,12 +73,21 @@ class TileCollection {
             int newX = tile.x + moveX;
             int newY = tile.y + moveY;
 
-            if (newY >= height) this.locked = true;
-            if (newX >= width || newX < 0) xLocked = true;
+            println("newY", newY);
+
+            if (!this.locked) {
+                if (newY >= height) this.locked = true;
+                for (Tile lockedTile: lockedTiles) {
+                    println("lockedTile.y", lockedTile.y);
+                    if (lockedTile.y == newY && lockedTile.x == newX) {
+                        this.locked = true;
+                        break;
+                    }
+                }
+            }
+            if (!xLocked && (newX >= width || newX < 0)) xLocked = true;
         }
 
-        //TODO When multiple blocks, everything will go to the ground instead of 
-        //stop even when there is a tile underneath it
         if (this.locked || xLocked) {
             drawTiles();
             return;
