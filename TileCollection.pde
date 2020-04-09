@@ -121,21 +121,39 @@ class TileCollection {
                 return;
         }
         PVector anchor = new PVector(anchorTile.x, anchorTile.y);
-        for (Tile tile: this.tiles) {
+        ArrayList<Tile> tempTiles = new ArrayList();
+        for (Tile tile: this.tiles) tempTiles.add(new Tile(tile.x / STATIC.gridSize, tile.y / STATIC.gridSize, tile.tileColor)); 
+
+        boolean skip = false;
+
+        for (Tile tile: tempTiles) {
             tile.x -= anchor.x;
             tile.y -= anchor.y;
             int oldY = tile.y;
             int oldX = tile.x;
             if (clockwise) {
-                tile.y = -tile.x;
-                tile.x = oldY;
-            } else {
                 tile.x = -tile.y;
                 tile.y = oldX;
+            } else {
+                tile.y = -tile.x;
+                tile.x = oldY;
             }
             tile.x += anchor.x;
             tile.y += anchor.y;
+            if (tile.x >= width || tile.x < 0) {
+                skip = true;
+                break;
+            }
+            for (Tile lockedTile: lockedTiles) if (lockedTile.x == tile.x && lockedTile.y == tile.y) {
+                skip = true;
+                break;
+            }
+           if (skip) break; 
         }
+
+        println(skip);
+        if (!skip) this.tiles = tempTiles;
+
         drawEverything();
     }
 

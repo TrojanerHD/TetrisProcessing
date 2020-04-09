@@ -22,7 +22,30 @@ void draw() {
         }
         count = 0;
     }
-    for (Tile tile: lockedTiles) tile.printSquare();
+
+    HashMap<Integer, ArrayList<Integer>> y = new HashMap();
+    for (Tile tile: lockedTiles) {
+        if (!y.containsKey(tile.y)) y.put(tile.y, new ArrayList());
+        y.get(tile.y).add(tile.x);
+        tile.printSquare();
+    }
+
+    int yHeight = -1;
+    for (Integer i: y.keySet())
+        if (y.get(i).size() == 10) {
+            yHeight = i;
+            break;
+        }
+    
+    if (yHeight != -1) {
+        ArrayList<Tile> tempLockedTiles = new ArrayList();
+        for (Tile tile: lockedTiles) {
+            if (tile.y != yHeight) tempLockedTiles.add(tile);
+            if (tile.y < yHeight) tile.setXAndY(tile.x, tile.y + STATIC.gridSize);
+        }
+        lockedTiles = tempLockedTiles;
+        drawEverything();
+    }
 }
 
 void keyPressed() {
