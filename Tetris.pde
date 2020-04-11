@@ -1,24 +1,36 @@
 ArrayList<Tile> lockedTiles = new ArrayList();
 TileCollection tc = new TileCollection();
+TileCollection nextTile = new TileCollection();
 int count = 0;
 boolean pause = false;
+boolean blockInput = false;
+boolean playing = true;
 
 void setup() {
-    size(350, 700);
-    background(0);
+    size(525, 700);
     Background bg = new Background();
     bg.draw();
+    textSize(16);
     tc.generateRandomTile();
+    nextTile.generateRandomTile();
+    nextTile.locked = true;
+    nextTile.shiftTiles(true);
 }
 
 void draw() {
+    if (!playing) return;
     if (count < 60) count++;
     else {
         if(!pause) tc.moveTiles(Direction.DOWN);
         if (tc.locked) {
             for (Tile tile: tc.tiles) lockedTiles.add(tile);
-            tc = new TileCollection();
-            tc.generateRandomTile();
+            tc = new TileCollection(nextTile);
+            nextTile = new TileCollection();
+            nextTile.generateRandomTile();
+            nextTile.locked = true;
+            nextTile.shiftTiles(true);
+            tc.shiftTiles(false);
+            tc.checkForGameEnd();
         }
         count = 0;
     }
@@ -49,14 +61,26 @@ void draw() {
 }
 
 void keyPressed() {
+    if (blockInput) return;
+    if (!playing) {
+        if (keyCode != 32) return;
+        tc.generateRandomTile();
+        nextTile.generateRandomTile();
+        nextTile.locked = true;
+        playing = true;
+        nextTile.shiftTiles(true);
+        return;
+    }
     switch (keyCode) {
         case 65:
-        case 18:
+        case 37:
             tc.moveTiles(Direction.LEFT);
             break;
         case 87:
         case 38:
-            while(!tc.locked) tc.moveTiles(Direction.DOWN);
+            blockInput = true;
+            while (!tc.locked && playing) tc.moveTiles(Direction.DOWN);
+            blockInput = false;
             break;
         case 83:
         case 40:
@@ -85,4 +109,5 @@ void drawEverything() {
     new Background().draw();
     for (Tile tile: lockedTiles) tile.printSquare();
     tc.drawTiles();
+    nextTile.drawTiles();
 }

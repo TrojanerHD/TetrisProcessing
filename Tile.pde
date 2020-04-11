@@ -11,6 +11,12 @@ class Tile {
         this.printSquare();
     }
 
+    Tile(Tile tile) {
+        this.tileColor = tile.tileColor;
+        this.x = tile.x;
+        this.y = tile.y;
+    }
+
     void setXAndY(int x, int y) {
         this.x = x;
         this.y = y;
